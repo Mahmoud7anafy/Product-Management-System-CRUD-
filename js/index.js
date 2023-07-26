@@ -20,18 +20,22 @@ if(localStorage.getItem("productList"))
 
 function addProduct()
 {
-    var product=
-    {
-        name:productName.value,
-        price:productPrice.value,
-        category:ProductCategory.value,
-        Description:ProductDescription.value,
-    };
-    
-    productList.push(product);
-   displayProduct(productList);
-   localStorage.setItem("productList",JSON.stringify(productList));
-   clearForm();
+ if( validateProductName() && validateProductPrice() && validateProductCategory() && validateProductDescription())
+ {
+  var product=
+  {
+      name:productName.value,
+      price:productPrice.value,
+      category:ProductCategory.value,
+      Description:ProductDescription.value,
+  };
+  
+  productList.push(product);
+ displayProduct(productList);
+ localStorage.setItem("productList",JSON.stringify(productList));
+ clearForm();
+ }
+   
   
    
 }
@@ -56,14 +60,17 @@ function displayProduct(list)
     document.getElementById("table-content").innerHTML=cartona;
     document.getElementById('noData').classList.add('d-none')
     document.getElementById("table-content").classList.remove('d-none')
+
+     
     
   }
   else
   {
-    console.log("no");
+   
     document.getElementById("table-content").classList.add('d-none')
     document.getElementById('noData').classList.replace('d-none','d-block')
     document.getElementById('noData').innerHTML= `<h3 class="text-center my-4"> NO DATA FOUND</h3>`;
+    
 
    
   }
@@ -106,6 +113,7 @@ function searchProduct(searchLetter)
   }
  
   displayProduct(foundProduct)
+  
 }
 
 function getUpdate(index)
@@ -124,7 +132,6 @@ function getUpdate(index)
 
 function update()
 {
-
   productList[temp].name=productName.value;
   productList[temp].price=productPrice.value;
   productList[temp].category=ProductCategory.value;
@@ -132,8 +139,84 @@ function update()
   localStorage.setItem("productList",JSON.stringify(productList));
   displayProduct(productList)
   clearForm();
+}
+
+function validateProductName()
+{
+  var regex=/^[A-Z][a-z]{2,9}$/;
+  var nameError=document.getElementById('nameError');
+
+  if(regex.test(productName.value))
+  {
+    nameError.classList.replace('d-block','d-none')
+    productName.classList.replace('is-invalid','is-valid');
+    return true;
+  }
+  else
+ nameError.classList.replace('d-none','d-block')
+ productName.classList.add('is-invalid');
+  return false;
   
+}
+
+function validateProductPrice()
+{
+  var regex =/^[1-9][0-9]{3,4}$/;
+  var priceError=document.getElementById('priceError');
+  if(regex.test(productPrice.value))
+  {
+
+    priceError.classList.replace('d-block','d-none')
+    productPrice.classList.replace('is-invalid','is-valid')
+      return true
+  }
+  else
+  {
+    priceError.classList.replace('d-none','d-block')
+    productPrice.classList.add('is-invalid')
+    return false
+  }
 
 }
 
 
+function validateProductCategory()
+{
+  var regex =/^(mobile|laptop|TV)$/;
+  var CategoryError=document.getElementById('CategoryError');
+  if(regex.test(ProductCategory.value))
+  {
+
+    CategoryError.classList.replace('d-block','d-none')
+    ProductCategory.classList.replace('is-invalid','is-valid')
+      return true
+  }
+  else
+  {
+    CategoryError.classList.replace('d-none','d-block')
+    ProductCategory.classList.add('is-invalid')
+    return false
+  }
+
+}
+
+
+function validateProductDescription()
+{
+  var regex =/^[a-zA-z]{10}$/;
+  var descriptionError=document.getElementById('descriptionError');
+  if(regex.test(ProductDescription.value))
+  {
+
+    descriptionError.classList.replace('d-block','d-none')
+    ProductDescription.classList.replace('is-invalid','is-valid')
+      return true
+  }
+  else
+  {
+    descriptionError.classList.replace('d-none','d-block')
+    ProductDescription.classList.add('is-invalid')
+    return false
+  }
+
+}
